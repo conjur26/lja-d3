@@ -4,8 +4,27 @@
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
   <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
   <title>Practice Assignment 1</title>
-  <script type="text/javascript" src="../../jQuery/jquery-1.4.4.min.js"></script>
-  <script type="text/javascript" src="../../D3/d3.v3.min.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+  <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+  <style>
+     body {
+       font: 10px sans-serif;
+     }
+     .chart {
+       font-family: Arial, sans-serif;
+       font-size: 10px;
+     }
+     .axis path, .axis line {
+       fill: none;
+       stroke: #000000;
+       stroke-width: 1px;
+       shape-rendering: crispEdges;
+     }
+     .bar {
+       z-index: 1000;
+      }
+  </style>
+  
   <script type="text/javascript">
   	$(document).ready(function() {
 		   var data = 
@@ -14,7 +33,6 @@
 		    {"Quantity":"70", "fruits":"Tangerines"},
 		    {"Quantity":"90", "fruits":"Pomegranates"},
 		    {"Quantity":"50", "fruits":"Oranges"}];
-		
 		
 		   var margin = {top: 40, right: 40, bottom: 40, left:80},
 		   width = 600,
@@ -68,7 +86,7 @@
 		      .attr('class', 'bar')
 		      .attr('x', 0)
 		      .attr('y', function(d,i){return -1 + margin.top + y.rangeBand() * i - 40;})
-		      .attr('height', 84)
+		      .attr('height', y.rangeBand())
 		      .attr('width', function(d) { return x(d.Quantity) })
 		      .style("fill", function(d, i) { return colorScale(i); });
 		
@@ -80,24 +98,6 @@
 		      .text("Practice Assignment 1");
 		});
   </script>
-  <style>
-     body {
-       font: 10px sans-serif;
-     }
-     .chart {
-       font-family: Arial, sans-serif;
-       font-size: 10px;
-     }
-     .axis path, .axis line {
-       fill: none;
-       stroke: #000000;
-       stroke-width: 1px;
-       shape-rendering: crispEdges;
-     }
-     .bar {
-       z-index: 1000;
-      }
-  </style>
   </head>
 	<body>
 	<div id="bar-demo"  style="position: relative; top: 3px; left: 20px;"></div>
