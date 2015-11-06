@@ -85,7 +85,7 @@
 		      .append('rect')
 		      .attr('class', 'bar')
 		      .attr('x', 0)
-		      .attr('y', function(d,i){return -1 + margin.top + y.rangeBand() * i - 40;})
+		      .attr('y', function(d,i){return -1 + margin.top + y.rangeBand() * i - margin.top;})
 		      .attr('height', y.rangeBand())
 		      .attr('width', function(d) { return x(d.Quantity) })
 		      .style("fill", function(d, i) { return colorScale(i); });
