@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Week 2 Assignment</title>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+  <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+  <style type='text/css'>
+		text {
+			font-family: sans-serif;
+			font-weight: regular;
+			font-size: 10px;
+			fill: white;
+		}
+		.title {
+			font-size: 12px;
+			font-weight: bold;
+			fill: black;
+		}
+  </style>
+
+  <script type='text/javascript'>
+  $(window).load(function(){
+    
+    //Read data file and create visualization
+    d3.json("pol_viol.json", function(error, json) {
+      if (error) return console.warn(error);
+      var data = json;
+      var nest = d3.nest()
+                    .key(function(d) { return d.country; })
+                    .rollup(function(values) { return d3.sum(values, function(d) {return +d.N_INJURD;}) })
+                    .entries(data);
+      var top5 = nest.sort(function(a,b) { return b.values-a.values; }).slice(0,5);
+
+  	  //Initialize pie chart variables
+  	  var margin = {top: 30, right: 40, bottom: 50, left:40},
+          w = 400 - margin.left - margin.right,
+          h = 400 - margin.top - margin.bottom;
+      var outerRadius = w/2;
+		  var innerRadius = 0;
+
+      //Define color scale, taken from country flags
+      var color = d3.scale.ordinal()
+                          .range(["#CE0D39", "#014711", "#FF0000", "#FF9933", "#0066CB"]);
+
+      //Define pie size
+      var arc = d3.svg.arc()
+                  .outerRadius(outerRadius)
+                  .innerRadius(innerRadius);
+            
+      //Apply pie layout
+      var pie = d3.layout.pie()
+                  .value(function (d) {
+                    return d.values;
+                  });
+
+      //Create SVG container
+      var svg = d3.select("body")
+                  .append("svg")
+                  .attr("width", w + margin.left + margin.right)
+                  .attr("height", h + margin.top + margin.bottom)
+                  .append("g")
+                  .attr("transform", "translate(" + (w/2 + margin.right) + "," + (h/2 + margin.top) + ")");
+ 
+      //Calculate pie wedges
+      var g = svg.selectAll(".arc")
+                 .data(pie(top5))
+                 .enter().append("g")
+                 .attr("class", "arc");
+
+      //Display pie wedges
+      g.append("path")
+       .attr("d", arc)
+       .style("fill", function (d,i) {
+         return color(i);
+       });
+    
+      //Define comma as 1000s separator
+      var commaFormat = d3.format("0,000");
+    
+      //Display country names, offset a bit toward outside edge
+      g.append("text")
+       .attr("transform", function(d) {
+          var c = arc.centroid(d);
+          return "translate(" + c[0]*1.4 +"," + c[1]*1.4 + ")";
+       })
+       .style("text-anchor","middle")
+       .text(function (d,i) {
+         return top5[i].key;
+       });
+     
+       //Display injured counts below country names
+       g.append("text")
+        .attr("transform", function(d) {
+          var c = arc.centroid(d);
+          return "translate(" + c[0]*1.4 +"," + c[1]*1.4 + ")";
+      })
+      .style("text-anchor","middle")
+      .attr("dy", "1.5em")
+      .text(function (d,i) {
+        return commaFormat(top5[i].values);
+      });
+     
+      // Display title
+      svg.append("text")
+         .attr("class", "title")
+         .attr("y", h/2 + (margin.bottom))
+         .attr("dy", "-.5em")
+         .attr("text-anchor", "middle")
+         .text("Most injuries reported in NY Times, 1946-2005");
+     
+    });
+
+});
+</script>
+</head>
+<body>
+<div id="graph_area"></div>
+</body>
+</html>
