@@ -92,10 +92,10 @@
         .await(ready);
 
       //Display zip code segments
-      function ready(error, us) {
+      function ready(error, chi) {
         svg.append("g")
          .selectAll("path")
-         .data(topojson.feature(us, us.objects.zip_codes_for_the_usa).features)
+         .data(topojson.feature(chi, chi.objects.zip_codes_for_the_usa).features)
          .enter()
          .append("path")
          .attr("class", "zipcode")
@@ -104,7 +104,7 @@
 
       //Display zip code labels
       svg.selectAll(".zipcode-label")
-         .data(topojson.feature(us, us.objects.zip_codes_for_the_usa).features)
+         .data(topojson.feature(chi, chi.objects.zip_codes_for_the_usa).features)
          .enter()
          .append("text")
          .attr("class", function(d) { return "zipcode-label z" + d.properties.zip; })
